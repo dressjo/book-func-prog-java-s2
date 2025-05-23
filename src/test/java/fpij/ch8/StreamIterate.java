@@ -8,9 +8,9 @@ public class StreamIterate {
 
   @Test
   void testStreamIterate() {
-    Stream.iterate(0, i -> i + 1)
-        .limit(3)
-            .findFirst().stream().forEach(System.out::println);
+    Stream.iterate(0, i -> i + 2)
+        .limit(10)
+        .forEach(System.out::println);
   }
 
 }

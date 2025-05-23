@@ -8,26 +8,16 @@ import org.junit.jupiter.api.Test;
 
 public class TailCallOptimization {
 
-  @Test
-  void textBookFactorial() {
-    System.out.println("Textbook factorial %s: ".formatted(myFactorial(20000)));
-  }
 
   @Test
   void myFactorial() {
-    try {
-      System.out.println(myFactorial(10));
-    } catch(StackOverflowError soe) {
-      System.out.println(soe);
-    }
+    System.out.println(myFactorial(10));
   }
 
   @Test
   void factorial() {
     System.out.println(basicFactorial(10));
   }
-
-
 
   private static int myFactorial(int n) {
     int result = n;
@@ -48,8 +38,13 @@ public class TailCallOptimization {
   }
 
   @Test
+  void naiveFactorial() {
+    System.out.println(Factorial.naiveFactorialRec(5));
+  }
+
+  @Test
   void tailCallOptimization() {
-    final BigInteger factorialResult = TCOFactorial.factorial(BigFactorial.FIVE);
+    final BigInteger factorialResult = TCOFactorial.factorial(new BigInteger("3"));
     System.out.println("TCO Factorial result: %s".formatted(factorialResult));
   }
 
@@ -61,8 +56,7 @@ class TCOFactorial {
     return factorialTailRec(BigInteger.ONE, number).invoke();
   }
 
-  public static TailCall<BigInteger> factorialTailRec(
-      final BigInteger factorial, final BigInteger number) {
+  public static TailCall<BigInteger> factorialTailRec(final BigInteger factorial, final BigInteger number) {
     if (number.equals(BigInteger.ONE)) {
       return TailCalls.call(() -> TailCalls.done(factorial));
     }
@@ -98,7 +92,7 @@ class TCOFactorial {
     }
   }
 
-  public class BigFactorial {
+  public static class BigFactorial {
     public static BigInteger decrement(final BigInteger number) {
       return number.subtract(java.math.BigInteger.ONE);
     }
@@ -109,6 +103,19 @@ class TCOFactorial {
     public static final BigInteger ONE = java.math.BigInteger.ONE;
     public static final BigInteger FIVE = new BigInteger("5");
     public static final BigInteger TWENTYK = new BigInteger("20000");
+  }
+
+}
+
+class Factorial {
+
+  TailCall call;
+
+  public static int naiveFactorialRec(final int number) {
+    if (number == 1) {
+      return number;
+    }
+    return number * naiveFactorialRec(number - 1);
   }
 
 }
